@@ -16,6 +16,8 @@ class BenefitEligibilityElementGroup
       guardian
       unrelated
       other_tax_dependent
+      grandchild
+      nephew_or_niece
     )
 
   SHOP_MARKET_RELATIONSHIP_CATEGORY_KINDS = %w(
