@@ -1,5 +1,6 @@
 class Exchanges::HbxProfilesController < ApplicationController
   include DataTablesAdapter
+  include SepAll
 
   before_action :check_hbx_staff_role, except: [:request_help, :show, :assister_index, :family_index]
   before_action :set_hbx_profile, only: [:edit, :update, :destroy]
@@ -214,6 +215,32 @@ class Exchanges::HbxProfilesController < ApplicationController
       format.html { render "insured/families/index" }
       format.js {}
     end
+  end
+
+  def sep_index
+
+    setEventKinds
+
+    respond_to do |format|
+      format.html { render "sep/approval/sep_index" }
+      format.js {}
+    end
+  end
+
+  def sep_index_datatable
+
+    if Family.exists(special_enrollment_periods: true).present?
+      if(params[:q] == 'both')
+        includeBothMarkets
+      elsif(params[:q] == 'ivl')
+        includeIVL
+      else
+        includeShop
+      end
+    end
+
+    setEventKinds
+    render
   end
 
   def broker_agency_index
@@ -454,5 +481,12 @@ private
 
   def call_customer_service(first_name, last_name)
     "No match found for #{first_name} #{last_name}.  Please call Customer Service at: (855)532-5465 for assistance.<br/>"
+  end
+
+  def setEventKinds
+    @event_kinds_all = ['first_of_next_month', '15th_day_rule'];
+    @event_kinds_default = ['first_of_next_month'];
+    @qualifying_life_events_shop = QualifyingLifeEventKind.shop_market_events
+    @qualifying_life_events_individual = QualifyingLifeEventKind.individual_market_events
   end
 end
