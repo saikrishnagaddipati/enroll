@@ -335,6 +335,13 @@ class Exchanges::HbxProfilesController < ApplicationController
     @unread_messages = @profile.inbox.unread_messages.try(:count) || 0
   end
 
+  def add_new_sep
+    if params[:qle_id].present?
+      createSep
+    end
+    redirect_to exchanges_hbx_profiles_root_path
+  end
+
   # GET /exchanges/hbx_profiles/new
   def new
     @organization = Organization.new
