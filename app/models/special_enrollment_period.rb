@@ -13,6 +13,9 @@ class SpecialEnrollmentPeriod
   # Date Qualifying Life Event occurred
   field :qle_on, type: Date
 
+  # Comments made by admin
+  field :admin_comment, type: String
+
   # Date coverage starts
   field :effective_on_kind, type: String
 
