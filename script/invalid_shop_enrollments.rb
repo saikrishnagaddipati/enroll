@@ -3,7 +3,7 @@ def enrollments_by_benefit_groups(benefit_groups = [])
 
   families = Family.where(:"households.hbx_enrollments.benefit_group_id".in => id_list)
   families.inject([]) do |enrollments, family|
-    enrollments += family.active_household.hbx_enrollments.where(:benefit_group_id.in => id_list).any_of([HbxEnrollment::enrolled.selector, HbxEnrollment::renewing.selector, HbxEnrollment::terminated.selector]).to_a
+    enrollments += family.active_household.hbx_enrollments.by_coverage_kind("health").where(:benefit_group_id.in => id_list).any_of([HbxEnrollment::enrolled.selector, HbxEnrollment::renewing.selector, HbxEnrollment::terminated.selector]).to_a
   end
 end
 
