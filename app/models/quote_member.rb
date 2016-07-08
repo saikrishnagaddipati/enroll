@@ -19,6 +19,7 @@ class QuoteMember
   field :name_sfx, type: String
   field :gender, type: String
 
+
   validates_presence_of :dob
   validate :valid_dob
 

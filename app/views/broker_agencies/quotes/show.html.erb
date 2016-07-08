@@ -1,1 +1,120 @@
-<%= render "edit_form" %>
+<div class="module container broker_quote_tool">
+  <div class="row" class="col-md-12">
+         <input name='employee' value='50' type='hidden'>
+         <input name='spouse' value='0' type='hidden'>
+         <input name='domestic_partner' value='0' type='hidden'>
+         <input name='child_under_26' value='0' type='hidden'>
+        <p></p>
+        <%= form_tag(broker_agencies_quotes_root_path, method: :get) do  %>
+
+          <br>
+    <% if @quotes.count > 0 %>
+        	<div class="panel panel-default">
+        		<div class="panel-heading" role="tab" id="feature-mgmt-header">
+        				<a role="button" data-toggle="collapse" data-parent="#accordion" href="#feature-mgmt" aria-expanded="true" aria-controls="feature-mgmt">
+
+        					<b>Health Features and cost criteria</b>
+                  <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>
+                  <span style='margin-left: 50px; font-size: 120%;'  id='show_plan_criteria_count'>Plan count</span>
+                   <label class='btn btn-normal hide' id='reset_criteria'> Reset Criteria</label>
+        				</a>
+        		</div>
+        	  <div id="feature-mgmt" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="">
+            <%= render partial: 'my_features' %>
+        	  </div>
+        	</div>
+
+
+         <div class="panel panel-default">
+           <div class="panel-heading" role="tab" id="plan-selection-mgmt-header">
+              <a role="button">
+                   <div data-toggle="collapse" data-parent="#accordion" href="#plan-selection-mgmt"
+                     aria-expanded="true" aria-controls="plan-selection-mgmt" style='display: inline; float_left'>
+                       <b>Health Plan Selection</b>
+                       <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>
+                       <span style='margin-left: 50px; font-size: 120%;'  id='show_plan_selected_count'>Plan count</span>
+                   </div>
+               </a>
+               <label class='btn btn-normal' id='reset_selected'> Reset Selections</label>
+                       </div>
+                 <div id="plan-selection-mgmt" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="">
+
+               <%= render partial: 'my_plans' %>
+
+               <div class="panel panel-default">
+             <div class="panel-collapse collapse in" role="tabpanel" aria-labelledby="compare_benefits"  id="plan_comparison_frame">
+               <%= (render "quote_comparision" , quote_results: @quote_results) if @quote_results %>
+             </div>
+           </div>
+
+                 </div>
+               </div>
+
+
+      <% end %>
+      <% end %>
+
+      <%= render partial: 'broker_agencies/quotes/panels/quote' %>
+
+    </div>
+  </div>
+</div>
+
+
+<script type="text/javascript">
+
+$(document).on('ready page:load', function () {
+    window.select_health_plans = <%=raw @health_plan_quote_criteria %>
+    health_plan_count = Object.keys(window.select_health_plans).length
+    deductible_value = 6000
+    quote_change("<%= (@quote && @quote.id) || 'No quote' %>")
+
+    window.relationship_benefits = <%= raw @benefit_pcts_json %>
+    window.dental_relationship_benefits = window.relationship_benefits
+
+    window.roster_premiums = <%= raw @roster_premiums_json %>
+    window.dental_roster_premiums = <%= raw @dental_roster_premiums %>
+
+    <% if @quotes.count > 0 %> set_plan_costs() <% end %>
+    slider_listeners()
+    page_load_listeners()
+    toggle_plans(<%= raw @quote_criteria %>)
+    $('#PlanComparison').on('click', function(){
+       sort_plans()
+    });
+
+    $('.dental_carrier, .dental_metal, .dental_plan_type, .dc_network, .nationwide').on('click', function(){
+
+      class_name = $(this).attr('class')
+
+      $("." + class_name).each(function(){
+        $(this).removeClass('active1')
+      });
+
+      $(this).addClass('active1')
+
+      $('#dental_plans_container').click()
+
+      $.each($('#dental-feature-mgmt'), function() {
+        $(this).click();
+      });
+
+      carrier_id = $('#dental-carriers').find('div.active1').attr('data-carrier')
+      dental_level = $('#dental-metals').find('div.active1').attr('id')
+      plan_type = $('#dental-plan_types').find('div.active1').attr('id')
+      dc_network = $('#dental-dc_in_network').find('div.active1').attr('id')
+      nationwide = $('#dental-nationwide').find('div.active1').attr('id')
+      quote = $('#quote').val()
+
+      $.get('/broker_agencies/quotes/dental_plans_data/', {
+                                                            carrier_id: carrier_id,
+                                                            dental_level: dental_level,
+                                                            plan_type: plan_type,
+                                                            dc_network: dc_network,
+                                                            nationwide: nationwide,
+                                                            quote: quote
+                                                          }
+                                                        );
+    });
+});
+</script>

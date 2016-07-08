@@ -299,6 +299,7 @@ Rails.application.routes.draw do
       root 'quotes#index'
       collection do
         get :my_quotes # soon to be the index view
+        post :quote_index_datatable
         get :upload_employee_roster
         post :build_employee_roster
         get :new_household , :format => "js"
@@ -320,6 +321,14 @@ Rails.application.routes.draw do
         delete :delete_member
         delete :delete_household
       end
+
+      resources :quote_benefit_groups do
+        get :criteria
+        get :get_quote_info
+        post :update_benefits
+        get :plan_comparison
+      end
+
     end
 
     resources :quote_roster do

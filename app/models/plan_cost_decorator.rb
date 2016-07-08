@@ -14,10 +14,10 @@ class PlanCostDecorator < SimpleDelegator
   def plan_year_start_on
     #FIXME only for temp ivl
     #binding.pry
-    if @benefit_group.present? && @benefit_group.class != Quote
+    if @benefit_group.present? && @benefit_group.class != QuoteBenefitGroup
       benefit_group.plan_year.start_on
-    elsif @benefit_group.class == Quote
-      benefit_group.start_on
+    elsif @benefit_group.class == QuoteBenefitGroup
+      benefit_group.quote.start_on
     else
       TimeKeeper.date_of_record.beginning_of_year + 5.months
     end

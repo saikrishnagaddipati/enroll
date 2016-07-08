@@ -1,6 +1,4 @@
-
 <div class="container">
-  <hr/>
 
 	<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="false">
 		<div class="panel panel-default">
@@ -22,18 +20,23 @@
 		</div>
 		<div>&nbsp;</div>
 
+    <h3>Quote Roster</h3>
+
+    <p>The roster you build below will be used to estimate employee and employer costs for each benefit group.</p>
 
 		<%= f.fields_for :quote_households do |qhh| %>
 			<div id="family-panel">
 			  <div class="panel panel-default">
-					<div class="panel-heading" role="tab" id="headingOne">
-						<h4 class="panel-title">
-							<%= qhh.text_field :family_id, { size: 2} %>
-							<button type="button" class="btn btn-default" aria-label="Left Align" onclick="addEmployeeRowToFamily('<%=qhh.object.id.to_s%>','<%= qhh.index %>')">
+					<div class="panel-heading">
+            <div class="row">
+							<div class="col-md-3">Family Id: <%= qhh.text_field :family_id, { size: 2} %></div>
+              <div class="col-md-3"><%= qhh.collection_select :quote_benefit_group_id, @quote.quote_benefit_groups, :id, :title, {:class => "floatlabel", :prompt => true}   %></div>
+							<div class="col-md-6"><button type="button" class="btn btn-default" aria-label="Left Align" onclick="addEmployeeRowToFamily('<%=qhh.object.id.to_s%>','<%= qhh.index %>')">
 								<span class="glyphicon glyphicon-user" aria-hidden="true"></span> Add member to this family
 							</button>
 							<button type="button" data-household-id="<%=qhh.object.id%>" data-quote-id="<%=@quote.id%>" id="remove_household_button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						</h4>
+            </div>
+          </div>
 					</div>
 					<div id="col<%= qhh.object.id.to_s %>" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading<%= qhh.object.id.to_s %>">
 						<div class="panel-body" id="family-<%= qhh.object.id.to_s %>">
@@ -94,7 +97,7 @@ var remove_household_handler = function(){
         }
     });
 	}
-  $(this).parent().parent().parent().remove();
+  $(this).parent().parent().parent().parent().remove();
 };
 
 $('button#remove_household_button').click(remove_household_handler);

@@ -1,9 +1,108 @@
 <div class="module container broker_quote_tool">
   <div class="row" class="col-md-12">
-    <h3>Quote/Roster Management</h3>
+    <h1>Quote/Roster Management</h1>
+
+
+    <% @all_quotes.each do |q| %>
+
+      <!--<div class="col-sm-12 panel">
+        <div class="row">
+          <div class="col-sm-12">
+            <h3 class="title"><%= q.quote_name %></h3>
+            <p>Effective on: <%= q.start_on %></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            <h3> Benefit Groups</h3>
+            <% q.quote_benefit_groups.each do |qbg| %>
+              <p><%= qbg.title %> - <%= link_to "View/Edit Benefit Group", broker_agencies_quote_quote_benefit_group_path(quote_id: q.id, id: qbg.id) %></p>
+            <% end %>
+          </div>
+
+          <div class="col-sm-6">
+            <h3>Roster</h3>
+          </div>
+        </div>
+      </div>-->
+    <% end %>
+
+
+    <table class="table table-striped" id="Quote-index-dataTable">
+      <thead>
+      <tr>
+        <th>Quote Name</th>
+        <th>Family Count</th>
+        <th>Benefit Group Count</th>
+        <th>State</th>
+      </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+
+
+      <!--<table class="table">
+        <thead
+        <tr>
+          <th>Quote Action!!</th>
+          <th>Quote Name</th>
+          <th>Employer claim code</th>
+          <th class="text-right">Family Count</th>
+          <th class="text-right">State</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+         <% @all_quotes.each do |q| %>
+        <tr>
+           <td>
+        <%=
+          if q.aasm_state == 'draft'
+           link_to "Edit Quote Info & Roster" , "/broker_agencies/quotes/#{q.id}/edit"
+         else
+           link_to "View Published Quote", "#", id: q.id, class: 'view-published'
+         end
+         %>
+       </td>
+           <td><%= q.quote_name %></td>
+           <td><%= q.claim_code %></td>
+           <td class="text-right"><%= q.quote_households.count %></td>
+           <td class="text-right"><%= q.aasm_state %></td>
+           <td><button type="button" onclick="delete_quote_handler" id="close_button" data-quote-id="<%=q.id%>" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>-->
+
 
     <%=link_to "New Quote" , new_broker_agencies_quote_path , method: :get, class: "btn btn-default", id: "new_quote"%>
 
-    <hr>
   </div>
 </div>
+
+<script type="text/javascript" charset="utf-8">
+  // datatables setup
+  $(document).ready(function() {
+    $('#Quote-index-dataTable').DataTable( {
+      "processing": true,
+      "serverSide": true,
+      "ordering" : false,
+      "paging": true,
+      "lengthMenu": [ 10, 25],
+      "ajax": {
+        url: "<%= quote_index_datatable_broker_agencies_quotes_path(:format => :json) %>",
+        type: "POST",
+        data: function ( d ) {
+          console.log('Quote Index Datatable');
+        }
+      },
+      "columns": [
+        { data: 'quote_name' },
+        { data: 'family_count'},
+        { data: 'benefit_group_count'},
+        { data: 'quote_state'}
+    ]
+    } );
+  });
+</script>

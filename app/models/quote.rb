@@ -4,13 +4,13 @@ class Quote
   include MongoidSupport::AssociationProxies
   include AASM
 
-  PERSONAL_RELATIONSHIP_KINDS = [
-    :employee,
-    :spouse,
-    :domestic_partner,
-    :child_under_26,
-    :child_26_and_over
-  ]
+  # PERSONAL_RELATIONSHIP_KINDS = [
+  #   :employee,
+  #   :spouse,
+  #   :domestic_partner,
+  #   :child_under_26,
+  #   :child_26_and_over
+  # ]
 
   PLAN_OPTION_KINDS = [:single_plan, :single_carrier, :metal_level]
   field :quote_name, type: String, default: "Sample Quote"
@@ -18,11 +18,11 @@ class Quote
   field :start_on, type: Date, default: TimeKeeper.date_of_record.beginning_of_year
   field :broker_role_id, type: BSON::ObjectId
 
-  field :published_reference_plan, type: BSON::ObjectId
-  field :published_lowest_cost_plan, type: BSON::ObjectId
-  field :published_highest_cost_plan, type: BSON::ObjectId
-
-  field :published_dental_reference_plan, type: BSON::ObjectId
+  # field :published_reference_plan, type: BSON::ObjectId
+  # field :published_lowest_cost_plan, type: BSON::ObjectId
+  # field :published_highest_cost_plan, type: BSON::ObjectId
+  #
+  # field :published_dental_reference_plan, type: BSON::ObjectId
 
   field :claim_code, type: String, default: ''
   associated_with_one :broker_role, :broker_role_id, "BrokerRole"
@@ -30,17 +30,15 @@ class Quote
   associated_with_one :plan, :published_reference_plan, "Plan"
   associated_with_one :dental_plan, :published_dental_reference_plan, "Plan"
 
-  field :plan_option_kind, type: String, default: "single_carrier"
-  field :dental_plan_option_kind, type: String, default: "single_carrier"
+  # field :plan_option_kind, type: String, default: "single_carrier"
+  # field :dental_plan_option_kind, type: String, default: "single_carrier"
 
-  # NOT NEEDED FOR NOW. We will store plan reference at this level (quote model level)
-  #embeds_many :quote_reference_plans, cascade_callbacks: true
-
-
-  embeds_many :quote_households
+  # Quote should now support multiple benefit groups
+  embeds_many :quote_benefit_groups, cascade_callbacks: true
 
 
-  embeds_many :quote_relationship_benefits, cascade_callbacks: true
+  embeds_many :quote_households, cascade_callbacks: true
+
 
   # accepts_nested_attributes_for :quote_households
   accepts_nested_attributes_for :quote_households, reject_if: :all_blank
@@ -109,11 +107,6 @@ class Quote
     cost.round(2)
   end
 
-  def build_relationship_benefits
-    self.quote_relationship_benefits = PERSONAL_RELATIONSHIP_KINDS.map do |relationship|
-       self.quote_relationship_benefits.build(relationship: relationship, offered: true)
-    end
-  end
 
   def cost_by_offerings(plan)
     plan_costs_by_offerings = Hash.new
@@ -158,9 +151,9 @@ class Quote
     end
   end
 
-  def relationship_benefit_for(relationship)
-    quote_relationship_benefits.where(relationship: relationship).first
-  end
+  # def relationship_benefit_for(relationship)
+  #   quote_relationship_benefits.where(relationship: relationship).first
+  # end
 
 
   def calc

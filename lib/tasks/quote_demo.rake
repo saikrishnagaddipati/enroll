@@ -1,8 +1,19 @@
 # bundle exec rake quote_demo:gen
-# bundle exec rake quote_demo:clear 
+# bundle exec rake quote_demo:clear
+# bundle exec rake quote_demo:delete_quotes
 
 namespace :quote_demo do
   desc "generate demo data"
+
+  task :delete_quotes => :environment do
+
+    puts "::: Deleting All Quotes :::"
+
+
+    Quote.all.try(:destroy)
+
+    puts "All Quotes Deleted"
+  end
 
   task :clear => :environment do
 
@@ -49,7 +60,7 @@ namespace :quote_demo do
       broker.save!
       broker.approve!
       broker.broker_agency_accept!
-      broker.person.user = User.create!(email: email, 'password'=>'P@55word', roles: ['broker'])
+      broker.person.user = User.create!(email: email, oim_id: email, password: 'P@55word', roles: ['broker'])
       broker.person.save!
 
 
@@ -63,17 +74,31 @@ namespace :quote_demo do
 
       q.broker_role_id = broker_id
       q.quote_name = "Demo Quote"
-      q.plan_option_kind = "single_carrier"
       q.plan_year = 2016
-      q.start_on = Date.new(2016,5,2)
+      q.start_on = Date.new(2016,7,2)
 
-      q.build_relationship_benefits
+      #q.build_relationship_benefits
+      qbg = q.quote_benefit_groups.build
+      qbg.plan_option_kind = "single_carrier"
+      qbg.title = "Office Workers"
+      qbg.build_relationship_benefits
 
-      q.relationship_benefit_for("employee").premium_pct=(70)
-      q.relationship_benefit_for("child_under_26").premium_pct=(100)
+      qbg.relationship_benefit_for("employee").premium_pct=(70)
+      qbg.relationship_benefit_for("spouse").premium_pct=(50)
+      qbg.relationship_benefit_for("child_under_26").premium_pct=(100)
+
+      qbg1 = q.quote_benefit_groups.build
+      qbg1.plan_option_kind = "single_carrier"
+      qbg1.title = "Outside Workers"
+      qbg1.build_relationship_benefits
+
+      qbg1.relationship_benefit_for("employee").premium_pct=(80)
+      qbg1.relationship_benefit_for("spouse").premium_pct=(65)
+      qbg1.relationship_benefit_for("child_under_26").premium_pct=(90)
 
       qh = q.quote_households.build
       qh.family_id = "1"
+      qh.quote_benefit_group_id = qbg.id
 
       qm = qh.quote_members.build
 
@@ -100,7 +125,7 @@ namespace :quote_demo do
       qm = qh.quote_members.build
 
       qm.first_name = "Lucas"
-      qm.last_name = "Nartz"
+      qm.last_name = "Artz"
       qm.dob = Date.new(2012,1,10)
       qm.employee_relationship = "child_under_26"
 
@@ -122,6 +147,7 @@ namespace :quote_demo do
 
       qh = q.quote_households.build
       qh.family_id = "2"
+      qh.quote_benefit_group_id = qbg1.id
       qm = qh.quote_members.build
 
       qm.first_name = "Dengo"
@@ -137,6 +163,48 @@ namespace :quote_demo do
       qm.employee_relationship = "child_under_26"
       q.save
 
+
+      q = Quote.new
+
+      q.broker_role_id = broker_id
+      q.quote_name = "Yet another quote"
+      q.plan_year = 2016
+      q.start_on = Date.new(2016,8,2)
+
+      #q.build_relationship_benefits
+      qbg = q.quote_benefit_groups.build
+      qbg.plan_option_kind = "single_carrier"
+      qbg.title = "Essential Package"
+      qbg.build_relationship_benefits
+
+      qbg.relationship_benefit_for("employee").premium_pct=(90)
+      qbg.relationship_benefit_for("spouse").premium_pct=(95)
+      qbg.relationship_benefit_for("child_under_26").premium_pct=(50)
+
+
+      qh = q.quote_households.build
+      qh.family_id = "1"
+      qh.quote_benefit_group_id = qbg.id
+
+      qm = qh.quote_members.build
+
+      qm.first_name = "John"
+      qm.last_name = "Doe"
+      qm.dob = Date.new(1980,7,26)
+      qm.employee_relationship = "employee"
+
+      qh = q.quote_households.build
+      qh.family_id = "2"
+      qh.quote_benefit_group_id = qbg.id
+
+      qm = qh.quote_members.build
+
+      qm.first_name = "Hello"
+      qm.last_name = "World"
+      qm.dob = Date.new(1980,7,26)
+      qm.employee_relationship = "employee"
+
+      q.save
 
     end
 

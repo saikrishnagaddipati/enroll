@@ -3,6 +3,8 @@ class QuoteReferencePlan
 
   embedded_in :quote
 
+  field :name
+
   field :contribution_pct_as_int, type: Integer, default: 0
   field :employee_max_amt, type: Money, default: 0
   field :first_dependent_max_amt, type: Money, default: 0
@@ -14,7 +16,7 @@ class QuoteReferencePlan
   field :highest_cost_plan_id, type: BSON::ObjectId
 
   field :quote_results, type: Array, default: []
-  
+
 
   def reference_plan=(new_reference_plan)
     raise ArgumentError.new("expected Plan") unless new_reference_plan.is_a? Plan

@@ -1,7 +1,7 @@
 class QuoteRelationshipBenefit
   include Mongoid::Document
 
-  embedded_in :quote
+  embedded_in :quote_benefit_group
 
   field :relationship, type: String
   field :premium_pct, type: Float, default: 0.0
@@ -9,7 +9,7 @@ class QuoteRelationshipBenefit
   field :offered, type: Boolean, default: true
 
   validates_numericality_of :premium_pct, greater_than_or_equal_to: 0.0, less_than_or_equal_to: 100.0
-  
+
   # Indicates whether employer offers coverage for this relationship
   def offered?
     self.offered
