@@ -563,7 +563,7 @@ Family.collection.aggregate([
       {"$match" => {"aasm_state" => {"$ne" => 'inactive'},  }},
       {"$match" => {"households.hbx_enrollments.aasm_state" => {"$ne" => 'inactive'} }},
       {"$match" => {
-        "$and" => [
+        "$or" => [
           {"households.hbx_enrollments.aasm_state" => {"$ne" => "coverage_canceled"}},
           {"households.hbx_enrollments.external_enrollment" => {"$ne" => true}}
         ]}},

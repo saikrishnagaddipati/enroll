@@ -149,8 +149,9 @@ Rails.application.routes.draw do
         get 'new_message_to_broker'
         post 'send_message_to_broker'
         post :match
-        get 'welcome'
         get 'search'
+        get 'privacy'
+        get 'welcome'
       end
     end
 
@@ -441,7 +442,6 @@ Rails.application.routes.draw do
     collection do
       put :change_person_aasm_state
       get :show_docs
-      get :update_individual
       put :update_verification_type
       get :enrollment_verification
       put :enrollment_docs_state
