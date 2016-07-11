@@ -48,7 +48,7 @@ $.extend( true, DataTable.defaults, {
 	dom:
 		"<'row'<'col-sm-6'l><'col-sm-6'f>>" +
 		"<'row'<'col-sm-12'tr>>" +
-		"<'row'<'col-sm-5'i><'col-sm-7'p>>",
+		"<'row'<'col-sm-12'i><'col-sm-12'p>>",
 	renderer: 'bootstrap'
 } );
 
@@ -155,7 +155,7 @@ DataTable.ext.renderer.pageButton.bootstrap = function ( settings, host, idx, bu
 	};
 
 	// IE9 throws an 'unknown error' if document.activeElement is used
-	// inside an iframe or frame. 
+	// inside an iframe or frame.
 	var activeEl;
 
 	try {
