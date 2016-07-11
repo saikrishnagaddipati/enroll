@@ -33,21 +33,26 @@ def find_enrollments_with_invalid_plans(option)
     ]
 
 
-    Organization.exists(:employer_profile => true).each do |org|
+    Organization.exists(:employer_profile => true).where(
+      :"employer_profile.plan_years" => {:$elemMatch => {
+        :start_on => Date.new(2015,8,1),
+        :aasm_state.in => PlanYear::PUBLISHED
+      }}).each do |org|
 
       puts "---processing #{org.legal_name}"
 
       invalid_enrollments = []
 
-      if plan_year = org.employer_profile.active_plan_year
-        invalid_enrollments += plan_year_invalid_enrollments(plan_year)
-      end
+      # if plan_year = org.employer_profile.active_plan_year
+      #   invalid_enrollments += plan_year_invalid_enrollments(plan_year)
+      # end
 
       if plan_year = org.employer_profile.renewing_published_plan_year
         invalid_enrollments += plan_year_invalid_enrollments(plan_year)
       end
 
       invalid_enrollments.each do |enrollment|
+        next unless enrollment.auto_renewing?
         person = enrollment.family.primary_applicant.person
         begin
         csv << [
@@ -62,6 +67,10 @@ def find_enrollments_with_invalid_plans(option)
           enrollment.plan.name,
           enrollment.aasm_state.humanize.titleize
         ]
+
+        if option.to_i == 1
+          enrollment.cancel_coverage! if enrollment.may_cancel_coverage?
+        end
       rescue Exception => e
         puts "#{person.full_name}---#{e.to_s}"
       end
