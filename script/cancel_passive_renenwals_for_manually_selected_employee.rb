@@ -14,7 +14,7 @@ def plan_year_invalid_enrollments(plan_year)
   end
 end
 
-def find_enrollments_with_invalid_plans(option)
+def find_enrollments_with_invalid_plans
   CSV.open("passive_renewals_for_cancellation.csv", "w") do |csv|
 
     csv << [
@@ -58,9 +58,7 @@ def find_enrollments_with_invalid_plans(option)
               enrollment.aasm_state.humanize.titleize
             ]
 
-            if option.to_i == 1
-              enrollment.cancel_coverage! if enrollment.may_cancel_coverage?
-            end
+            enrollment.cancel_coverage! if enrollment.may_cancel_coverage?
           rescue Exception => e
             puts "#{person.full_name}---#{e.to_s}"
           end
@@ -70,12 +68,4 @@ def find_enrollments_with_invalid_plans(option)
   end
 end
 
-
-puts "Enter 0 for Export and 1 for Correct?"
-option = gets.chomp
-
-if option.to_i == 0 || option.to_i == 1
-  find_enrollments_with_invalid_plans(option)
-else
-  puts "Entered invalid option. Please try again!"
-end
+find_enrollments_with_invalid_plans
