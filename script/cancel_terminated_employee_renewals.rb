@@ -35,13 +35,13 @@ def find_enrollments_with_invalid_plans
       }}).each do |org|
 
       puts "---processing #{org.legal_name}"
-
-
       if plan_year = org.employer_profile.renewing_published_plan_year
 
         plan_year_invalid_enrollments(plan_year).each do |enrollment|
           person = enrollment.family.primary_applicant.person
           begin
+            terminated_on = enrollment.benefit_group_assignment.census_employee.employment_terminated_on
+
             csv << [
               person.first_name,
               person.last_name,
@@ -53,10 +53,16 @@ def find_enrollments_with_invalid_plans
               enrollment.plan.try(:hios_id),
               enrollment.plan.try(:name),
               enrollment.aasm_state.humanize.titleize,
-              enrollment.benefit_group_assignment.census_employee.employment_terminated_on.strftime("%m/%d/%Y")
+              terminated_on.strftime("%m/%d/%Y")
             ]
 
-            enrollment.cancel_coverage! if enrollment.may_cancel_coverage?
+            if terminated_on > enrollment.benefit_group.start_on
+              enrollment.update_attributes(:terminated_on => terminated_on.end_of_month)
+              enrollment.terminate_coverage!
+              puts "----coverage terminated"
+            else
+              enrollment.cancel_coverage! if enrollment.may_cancel_coverage?
+            end
           rescue Exception => e
             puts "#{person.full_name}---#{e.to_s}"
           end
