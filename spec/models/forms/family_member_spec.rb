@@ -277,6 +277,7 @@ describe Forms::FamilyMember, "which describes a new family member, and has been
     before do
       allow(family).to receive(:relate_new_member).with(new_person, relationship).and_return(new_family_member)
       allow(family).to receive(:save!).and_return(true)
+      allow(subject).to receive(:update_primary_person).and_return true
     end
 
     it "should create a new person" do
@@ -413,6 +414,27 @@ describe Forms::FamilyMember, "relationship validation" do
       expect(subject.errors.to_hash[:base]).to include("can not have multiple spouse or life partner") 
     end
   end
+
+  context "grand child" do
+    let(:relationship) { "grandchild" }
+    let(:person){FactoryGirl.create :person }
+    subject { Forms::FamilyMember.new(person_properties.merge({:family_id => family.id, :relationship => relationship , :is_primary_caregiver => true})) }
+
+    it "should save dependent" do
+      allow(family_member).to receive(:relationship).and_return(relationship)
+      expect(subject.valid?).to be true
+    end
+
+    # it "should save is_primary_caregiver info to primary_applicant" do
+    #   allow(family_member).to receive(:relationship).and_return(relationship)
+    #   allow(family).to receive_message_chain("primary_family_member.person").and_return(person)
+    #   allow(family).to receive(:primary_applicant_person).and_return(person)
+    #   allow(family).to receive(:save_relevant_coverage_households).and_return(true)
+    #   subject.save
+    #   expect(person.is_primary_caregiver).to be true
+    # end
+  end
+
 
   context "life_partner" do
     let(:relationship) { "life_partner" }
