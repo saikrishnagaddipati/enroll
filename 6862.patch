@@ -1,0 +1,29 @@
+diff --cc app/helpers/insured/families_helper.rb
+index ab6996c,bc55013..0000000
+--- a/app/helpers/insured/families_helper.rb
++++ b/app/helpers/insured/families_helper.rb
+@@@ -117,9 -105,16 +117,24 @@@ module Insured::FamiliesHelpe
+      employee_role.employer_profile.active_broker_agency_account.writing_agent rescue false
+    end
+  
+++<<<<<<< b9664f16c70f6591e310a38f5a9937ebe03c8ccc
+ +  def display_aasm_state?(aasm_state)
+ +    if aasm_state == "coverage_selected" || aasm_state == "coverage_canceled" || aasm_state == "coverage_terminated"
+ +     true
+ +    end
+ +  end
+++=======
++   def display_aasm_state?(enrollment)
++     unless enrollment.is_shop?
++        aasm_state = enrollment.aasm_state
++       if aasm_state == "coverage_selected" || aasm_state == "coverage_canceled" || aasm_state == "coverage_terminated"
++         true
++       else
++         false  
++       end 
++     else
++       true  
++     end
++   end    
+++>>>>>>> Refs 6862 made behavior only affect IVL market and not shop
+  end

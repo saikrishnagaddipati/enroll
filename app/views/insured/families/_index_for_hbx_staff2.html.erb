@@ -11,7 +11,7 @@
 
 <div class="row container">
   <div id="families">
-    <%= render "insured/families/families_table", families: @families %>
+    <%= render "insured/families/families_table_for_hbx_staff", families: @families %>
   </div>
 
   <div class="row container">
@@ -23,4 +23,10 @@
       <p><%= "#{number_with_delimiter(@families.count)} / #{number_with_delimiter(Family.count)} " %><small>(families selected / total)</small></p>
     </div>
   </div>
+</div>
+<div class="row container">
+  <%=render 'exchanges/agents/consumer_application_links' %>
+</div>
+<div class='row container'>
+  <p> After working on an enrollment return to this page via the person icon in the header </p>
 </div>

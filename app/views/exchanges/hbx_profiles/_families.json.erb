@@ -1,0 +1,13 @@
+{
+	"checkbox_column": "",
+	"name": "<%= json_escape family.primary_family_member.full_name %>",
+	"ssn": "<%= json_escape family.primary_family_member.ssn %>",
+	"dob": "<%= json_escape family.primary_family_member.dob %>",
+	"hbx_id": "<%= json_escape family.primary_family_member.hbx_id %>",
+	"family_ct": "<%= json_escape family.active_family_members.count %>",
+	"registered": "<%= json_escape family.primary_family_member.person.user.present? ? "Yes" : "No" %>",
+	"consumer": "<%= json_escape family.primary_family_member.person.consumer_role.present?  ? "Yes" : "No" %>",
+	"employee": "<%= json_escape family.primary_family_member.person.active_employee_roles.present?  ? "Yes" : "No" %>",
+	"row_functions": ""
+}
+

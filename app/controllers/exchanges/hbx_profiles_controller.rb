@@ -216,6 +216,22 @@ class Exchanges::HbxProfilesController < ApplicationController
     end
   end
 
+  def families_index_datatable
+    dt_query = extract_datatable_parameters
+    families = Family.all
+   
+    @draw = dt_query.draw
+    @total_records = families.count
+    @records_filtered = families.count
+
+    if families.is_a? Array
+      @families = families[dt_query.skip..families.count]
+    else
+      @families = families.skip(dt_query.skip).limit(dt_query.take)
+    end
+    render "families_index_datatable"
+  end
+
   def broker_agency_index
     @broker_agency_profiles = BrokerAgencyProfile.all
 
