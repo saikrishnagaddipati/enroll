@@ -46,6 +46,9 @@ RSpec.describe Insured::FamiliesController do
   let(:family_members) { [double("FamilyMember")] }
   let(:employee_roles) { [double("EmployeeRole")] }
   let(:consumer_role) { double("ConsumerRole") }
+  let(:census_employee) { double("CensusEmployee")}
+  let(:benefit_group_assignment) {double("BenefitGroupAssignment")}
+  let(:benefit_group) { double("BenefitGroup")}
   # let(:coverage_wavied) { double("CoverageWavied") }
   let(:qle) { FactoryGirl.create(:qualifying_life_event_kind, pre_event_sep_in_days: 30, post_event_sep_in_days: 0) }
 
@@ -96,13 +99,16 @@ RSpec.describe Insured::FamiliesController do
     context "for SHOP market" do
 
       let(:employee_roles) { double }
-      let(:employee_role) { [double("EmployeeRole")] }
+      let(:employee_role) { double("EmployeeRole") }
 
       before :each do
         FactoryGirl.create(:announcement, content: "msg for Employee", audiences: ['Employee'])
         allow(person).to receive(:has_active_employee_role?).and_return(true)
         allow(person).to receive(:active_employee_roles).and_return([employee_role])
         allow(family).to receive(:coverage_waived?).and_return(true)
+        allow(employee_role).to receive(:census_employee).and_return(census_employee)
+        allow(census_employee).to receive(:active_benefit_group_assignment).and_return(benefit_group_assignment)
+        allow(benefit_group_assignment).to receive(:benefit_group).and_return(benefit_group)
         sign_in user
         get :home
       end
@@ -128,6 +134,10 @@ RSpec.describe Insured::FamiliesController do
       it "should get announcement" do
         expect(flash.now[:warning]).to eq ["msg for Employee"]
       end
+
+      it "should get benefit group" do
+       expect(assigns(:benefit_group)).to eq(benefit_group)
+      end
     end
 
     context "for IVL market" do
@@ -142,6 +152,9 @@ RSpec.describe Insured::FamiliesController do
         allow(person).to receive(:has_active_employee_role?).and_return(false)
         allow(person).to receive(:has_active_consumer_role?).and_return(true)
         allow(person).to receive(:active_employee_roles).and_return([])
+        allow(person).to receive(:census_employee).and_return(census_employee)
+        allow(census_employee).to receive(:active_benefit_group_assignment).and_return(benefit_group_assignment)
+        allow(benefit_group_assignment).to receive(:benefit_group).and_return(benefit_group)
         sign_in user
         get :home
       end
@@ -176,6 +189,9 @@ RSpec.describe Insured::FamiliesController do
           allow(person).to receive(:has_active_employee_role?).and_return(false)
           allow(person).to receive(:has_active_consumer_role?).and_return(true)
           allow(person).to receive(:active_employee_roles).and_return([])
+          allow(person).to receive(:census_employee).and_return([])
+          allow(census_employee).to receive(:active_benefit_group_assignment).and_return([])
+          allow(benefit_group_assignment).to receive(:benefit_group).and_return([])
           sign_in user
           get :home
         end
@@ -188,7 +204,7 @@ RSpec.describe Insured::FamiliesController do
 
     context "for both ivl and shop" do
       let(:employee_roles) { double }
-      let(:employee_role) { [double("EmployeeRole")] }
+      let(:employee_role) { double("EmployeeRole") }
       let(:enrollments) { double }
 
       before :each do
@@ -205,6 +221,9 @@ RSpec.describe Insured::FamiliesController do
         allow(enrollments).to receive(:order).and_return([display_hbx])
         allow(family).to receive(:enrollments_for_display).and_return([{"hbx_enrollment"=>{"_id"=>display_hbx.id}}])
         allow(controller).to receive(:update_changing_hbxs).and_return(true)
+        allow(person).to receive(:census_employee).and_return(census_employee)
+        allow(census_employee).to receive(:active_benefit_group_assignment).and_return(benefit_group_assignment)
+        allow(benefit_group_assignment).to receive(:benefit_group).and_return(benefit_group)
       end
 
       context "with waived_hbx when display_hbx is employer_sponsored" do
@@ -212,6 +231,10 @@ RSpec.describe Insured::FamiliesController do
         let(:display_hbx) { HbxEnrollment.new(kind: 'employer_sponsored', aasm_state: 'coverage_selected', effective_on: TimeKeeper.date_of_record) }
         before :each do
           allow(family).to receive(:waivers_for_display).and_return([{"hbx_enrollment"=>{"_id"=>waived_hbx.id}}])
+          allow(person).to receive(:active_employee_roles).and_return([employee_role])
+          allow(employee_role).to receive(:census_employee).and_return(census_employee)
+          allow(census_employee).to receive(:active_benefit_group_assignment).and_return(benefit_group_assignment)
+          allow(benefit_group_assignment).to receive(:benefit_group).and_return(benefit_group)
           get :home
         end
         it "should be a success" do
@@ -231,6 +254,10 @@ RSpec.describe Insured::FamiliesController do
         it "waived should be false" do
           expect(assigns(:waived)).to eq false
         end
+
+         it "should get benefit group" do
+           expect(assigns(:benefit_group)).to eq(benefit_group)
+         end
       end
 
       context "with waived_hbx when display_hbx is individual" do
@@ -238,6 +265,10 @@ RSpec.describe Insured::FamiliesController do
         let(:display_hbx) { HbxEnrollment.new(kind: 'individual', aasm_state: 'coverage_selected', effective_on: TimeKeeper.date_of_record) }
         before :each do
           allow(family).to receive(:waivers_for_display).and_return([{"hbx_enrollment"=>{"_id"=>waived_hbx.id}}])
+          allow(person).to receive(:active_employee_roles).and_return([employee_role])
+          allow(employee_role).to receive(:census_employee).and_return(census_employee)
+          allow(census_employee).to receive(:active_benefit_group_assignment).and_return(benefit_group_assignment)
+          allow(benefit_group_assignment).to receive(:benefit_group).and_return(benefit_group)
           get :home
         end
         it "should be a success" do
