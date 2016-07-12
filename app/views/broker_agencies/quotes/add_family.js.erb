@@ -1,0 +1,3 @@
+<%= fields_for :quote_households, @qhh do |qhh| %>
+<%= raw(render partial: 'quote_household', locals: { qhh:qhh }  ).html_safe %>
+<% end %>

@@ -4,6 +4,8 @@ class Quote
   include MongoidSupport::AssociationProxies
   include AASM
 
+  extend Mongorder
+
   # PERSONAL_RELATIONSHIP_KINDS = [
   #   :employee,
   #   :spouse,
@@ -48,6 +50,20 @@ class Quote
   field :aasm_state_date, type: Date
 
   field :criteria_for_ui, type: String, default: []
+
+  def self.default_search_order
+    [[:quote_name, 1]]
+  end
+
+  def self.search_hash(s_rex)
+    search_rex = Regexp.compile(Regexp.escape(s_rex), true)
+    {
+      "$or" => ([
+        {"quote_name" => search_rex}
+      ])
+    }
+  end
+
 
   def published_employee_cost
     plan && roster_employee_cost(plan.id, plan.id)

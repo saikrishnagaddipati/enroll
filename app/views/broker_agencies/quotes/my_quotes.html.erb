@@ -2,6 +2,64 @@
   <div class="row" class="col-md-12">
     <h1>Quote/Roster Management</h1>
 
+    <div class="module">
+      <%= render partial: "shared/data_table", locals:  {
+        page_header:  ["Quote Management", "url", ""],
+        directions:  "",
+        # new_button:  ["Add Verification", "url", "request_type"],
+      	new_button:  [],
+    	  filters:  [
+      		# ["all", "", true, []],
+      		# ["some", "", true, [
+      		# 	["COBRA", "url", "request_type"],
+      		# 	["Termed", "url", "request_type"],
+      		# 	["Corn", "url", "request_type"]
+      		# ]],
+      		# ["the best ones", "", false, []],
+          # ["Dad", "", true, [
+          #   ["ZZZ", "url", "request_type"],
+      		# 	["Apples", "url", "request_type"],
+      		# 	["Corn", "url", "request_type"]
+          #   ]
+          # ]
+      	],
+      	bulk_actions:  [
+      		#["Send Secure Message", "", true],
+      		#["Delete", "", false]
+      	],
+      	row_functions:  false,
+      	row_actions:  [
+      		["asterisk", "url", "request_type", "tooltip"],
+      		["bomb", "url", "request_type", "tooltip"],
+      		["asterisk", "url", "request_type", "tooltip"],
+      		["bomb", "url", "request_type", "tooltip"],
+          ["caret-down", "url", "request_type", "View Details"]
+      	],
+      	buttons_below_table:  [
+      		# ['Export CSV', 'url', 'request_type'],
+      		# ['Print', 'url', 'request_type']
+      	],
+        child_rows:  [false, "datatables/child_row"],
+        responsive:  true,
+      	checkboxes:  false,
+      	pagination:  true,
+      	ordering:  false,
+      	info:  true,
+      	table_id:  "Quote-index-dataTable",
+      	data_url:  quote_index_datatable_broker_agencies_quotes_path(:format => :json),
+      	columns:  [
+          ["Quote Name", "quote_name"],
+          ["Family Count", "family_count"],
+          ["Benfit Group Count", "benefit_group_count"],
+          ["Claim Code", "claim_code"],
+          ["State", "quote_state"],
+      	  ["Roster", "quote_roster"],
+          ["","quote_delete"]
+      	]
+      } %>
+    </div>
+
+
 
     <% @all_quotes.each do |q| %>
 
@@ -28,7 +86,7 @@
     <% end %>
 
 
-    <table class="table table-striped" id="Quote-index-dataTable">
+    <!--<table class="table table-striped" id="Quote-index-dataTable">
       <thead>
       <tr>
         <th>Quote Name</th>
@@ -41,7 +99,7 @@
       </thead>
       <tbody>
       </tbody>
-    </table>
+    </table>-->
 
 
       <!--<table class="table">
@@ -85,7 +143,7 @@
 
 <script type="text/javascript" charset="utf-8">
   // datatables setup
-  $(document).ready(function() {
+  /*$(document).ready(function() {
     $('#Quote-index-dataTable').DataTable( {
       "processing": true,
       "serverSide": true,
@@ -108,5 +166,23 @@
         { data: 'quote_roster'}
     ]
     } );
-  });
+  });*/
+
+  var delete_quote_handler = function(){
+    console.log("Deleted Quote");
+    $.ajax({
+        type: "POST",
+        url: "/broker_agencies/quotes/" + this.getAttribute("data-quote-id"),
+        dataType: "js",
+        data: {"_method":"delete"},
+        success: function(){
+          console.log("Deleted successfully");
+
+        }
+    });
+    $(this).parent().parent().remove();
+    event.preventDefault();
+  };
+
+  $("button#close_button").click(delete_quote_handler);
 </script>

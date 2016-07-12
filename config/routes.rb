@@ -43,7 +43,7 @@ Rails.application.routes.draw do
         get :assister_index
         get :request_help
         get :verification_index
-        get :verifications_index_datatable
+        post :verifications_index_datatable
       end
 
       member do

@@ -97,7 +97,7 @@ function addEmployeeRowToFamily(family, idx) {
 
 var duplicate_household = function() {
 	var url = '<%= Rails.application.routes.url_helpers.edit_broker_agencies_quote_path(params[:id]) %>';
-	if(confirm("Duplicate this family " + this.getAttribute("data-household-id"))) {
+	if(confirm("Duplicate family ")) {
 
 		url = url + "?duplicate_household=" + this.getAttribute("data-household-id") + "&num_of_dup=" + $(this).find("option").filter(":selected").text();
 		console.log(url);

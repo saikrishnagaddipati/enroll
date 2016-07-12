@@ -1,78 +1,14 @@
 .module {
-  &#employers_dataTable_wrapper,
-  #families_dataTable_wrapper,
-  #verification-dataTable_wrapper {
-    .small-6 {
-      width: 50%;
-      &:first-of-type {
-        float: left;
-        .selectric {
-          height: 30px;
-          position: relative;
-          p {
-            position: relative;
-            &.label {
-              top: 4px;
-              height: auto !important;
-              line-height: normal !important;
-            }
-          }
-          .button {
-            top: -6px;
-          }
-        }
-        span {
-          position: relative;
-          top: 5px;
-          left: 8px;
+  .datatable {
+    &.datatable-header {
+      .vertically-aligned-row {
+        h1 {
+          width: 25%;
         }
       }
-      &:last-of-type {
-        float: right;
-        input.form-control {
-          padding-top: 5px !important;
-        }
-        span.search {
-          position: relative;
-          top: 3px;
-        }
-      }
-    }
-    div.dataTables_length label {
-      font-weight: normal;
-      text-align: left;
-      white-space: nowrap;
-    }
-    ​ div.dataTables_length select {
-      width: 75px;
-      display: inline-block;
-    }
-    ​ div.dataTables_filter input {
-      height: 30px;
-    }
-    ​ div.dataTables_filter {
-      text-align: right;
-    }
-    ​ div.dataTables_filter label {
-      font-weight: normal;
-      white-space: nowrap;
-      text-align: left;
-    }
-    ​ div.dataTables_filter input {
-      margin-left: 0.5em;
-      display: inline-block;
-      width: auto;
-    }
-    ​ div.dataTables_info {
-      padding-top: 8px;
-      white-space: nowrap;
-      text-align: right;
-    }
-    ​ div.dataTables_paginate {
-      margin: 20px;
-      white-space: nowrap;
     }
   }
+
 }
 .dataTables_info {
   text-align: right;
@@ -80,4 +16,114 @@
 
 .dataTables_paginate {
   text-align: center !important;
+}
+
+.dataTable {
+  .row-actions {
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+}
+
+.first-level {
+  margin: 0 0 0.675%;
+}
+.btn-group-second {
+  margin: 0 0 0.75%;
+}
+
+.select-all {
+  padding-left: 6px;
+}
+.table {
+  margin-top: 0.675%;
+}
+.table > tbody > tr > td {
+  vertical-align: middle;
+}
+.table > thead > tr > th {
+  vertical-align: middle;
+  text-transform: uppercase;
+  text-align: center;
+}
+.table-responsive .table {
+  margin-bottom: 0;
+}
+.table-responsive {
+  margin-bottom: 0.675%;
+}
+.vertically-aligned-row.header .select-all {
+  width: 25%;
+}
+.vertically-aligned-row.header .dropdown {
+  width: 40%;
+}
+.vertically-aligned-row.header > .vertically-aligned-row {
+  width: 75%;
+}
+.table-length, .dataTables_length {
+  display: inline;
+  font-size: 14px;
+  > label {
+    margin-bottom: 0;
+    width: 8.75%;
+    min-width: 60px;
+    padding-left: 5%;
+    .selectric {
+      background-color: transparent !important;
+      height: auto;
+      p.label {
+        padding: 0;
+        margin-bottom: 0;
+      }
+      b.button {
+        top: 6px;
+      }
+      p.label, b.button {
+        line-height: 1;
+        height: auto;
+      }
+    }
+  }
+}
+.dataTables_length {
+  background-color: $primary-white;
+  margin: 0 2.5%;
+  padding: 0.675%;
+  border-radius: 4px;
+  width: 100%;
+}
+.dataTables_filter {
+  input {
+    padding: 0 10px;
+    margin-left: 2.5%;
+    width: 50%;
+  }
+  label {
+    width: 100%;
+    font-size: 14px;
+    font-weight: normal;
+  }
+
+}
+.footer .select-all.vertically-aligned-row {
+  display: table;
+  width: 100%;
+  margin-bottom: 0.675%;;
+}
+.vertically-aligned-row > .vertically-aligned-row {
+  width: 50%;
+}
+
+.even {
+    background-color: $primary-white;
+
+}
+th, tr {
+  background-color: $primary-white;
+}
+.dataTables_info {
+}
+.dataTables_paginate {
+  display: none;
 }

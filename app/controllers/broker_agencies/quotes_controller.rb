@@ -38,6 +38,14 @@ class BrokerAgencies::QuotesController < ApplicationController
 
     quotes = Quote.where("broker_role_id" => current_user.person.broker_role.id)
 
+    @total_records = quotes.count
+    @records_filtered = quotes.count
+
+    unless dt_query.search_string.blank?
+      quotes = quotes.search(dt_query.search_string)
+      @records_filtered = quotes.count
+    end
+
     @payload = quotes.map { |q|
       {
         :quote_name => (view_context.link_to q.quote_name, broker_agencies_quote_path(q.id)),
@@ -45,14 +53,14 @@ class BrokerAgencies::QuotesController < ApplicationController
         :benefit_group_count => q.quote_benefit_groups.count,
         :claim_code => q.claim_code,
         :quote_state => q.aasm_state,
-        :quote_roster => (view_context.link_to "View/Edit", edit_broker_agencies_quote_path(q.id))
+        :quote_roster => (view_context.link_to "View/Edit", edit_broker_agencies_quote_path(q.id)),
+        :quote_delete => '<button type="button" onclick="delete_quote_handler" id="close_button" data-quote-id="' + q.id + '" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>'
 
       }
     }
 
       @draw = dt_query.draw
-      @total_records = 1
-      @records_filtered = 1
+
   end
 
   def show #index (old index)
@@ -156,7 +164,7 @@ class BrokerAgencies::QuotesController < ApplicationController
         qhm.first_name = ""
         qhm.last_name = ""
       end
-      for i in 0..params[:num_of_dup].to_i
+      for i in 1..params[:num_of_dup].to_i
         temp_household = dup_household.dup
         max_family_id = max_family_id + 1
         temp_household.family_id = max_family_id
