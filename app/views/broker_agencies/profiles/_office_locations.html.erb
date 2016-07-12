@@ -4,6 +4,11 @@
 <% if office_locations.present? %>
 	<table class="table">
 		<% office_locations.each do |office_location| %>
+		  <% if @show_phone %>
+			  <tr>
+			    <td><%= office_location.phone %></td>
+			  </tr>
+			<% end %>
 			<tr>
 				<td><%= office_location.address.to_s %></td>
 			</tr>

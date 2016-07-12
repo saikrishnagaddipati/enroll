@@ -38,6 +38,7 @@ class BrokerAgencies::ProfilesController < ApplicationController
      @provider = current_user.person
      @staff_role = current_user.has_broker_agency_staff_role?
      @id=params[:id]
+     @show_phone = true
   end
 
   def edit
