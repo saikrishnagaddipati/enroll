@@ -13,7 +13,6 @@ module Insured::EmployeeRolesHelper
     if relationship == "child_under_26" && calculate_age_by_dob(family_member.dob) > 26
       relationship = "child_over_26"
     end
-
     offered_relationship_benefits.include? relationship
   end
 

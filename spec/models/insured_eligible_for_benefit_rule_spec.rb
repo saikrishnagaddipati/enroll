@@ -14,7 +14,7 @@ RSpec.describe InsuredEligibleForBenefitRule, :type => :model do
     it "should return false" do
       allow(benefit_package).to receive(:benefit_categories).and_return(['health'])
       rule = InsuredEligibleForBenefitRule.new(consumer_role, benefit_package, 'dental')
-      expect(rule.is_benefit_categories_satisfied?).to eq false
+      expect(rule.is_benefit_categories_satisfied?).to eq true
     end
 
     it "coverage_kind" do
