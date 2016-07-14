@@ -218,9 +218,7 @@ class Exchanges::HbxProfilesController < ApplicationController
   end
 
   def sep_index
-
     setEventKinds
-
     respond_to do |format|
       format.html { render "sep/approval/sep_index" }
       format.js {}
@@ -228,7 +226,6 @@ class Exchanges::HbxProfilesController < ApplicationController
   end
 
   def sep_index_datatable
-
     if Family.exists(special_enrollment_periods: true).present?
       if(params[:q] == 'both')
         includeBothMarkets
@@ -238,7 +235,6 @@ class Exchanges::HbxProfilesController < ApplicationController
         includeShop
       end
     end
-
     setEventKinds
     render
   end

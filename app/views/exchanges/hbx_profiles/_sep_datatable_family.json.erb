@@ -1,8 +1,5 @@
-
 <% fam.each do|family| if fam.present? %>
-
 	<% if family == fam.last %>
-
 		[
 			"<%= family.primary_applicant.person.hbx_id.to_s %>",
 			"<%= family.primary_applicant.person.last_name.to_s%>",
@@ -23,9 +20,7 @@
 			"",
 			""
 		]
-
-	<% else %>
-				
+	<% else %>		
 		[
 			"<%= family.primary_applicant.person.hbx_id.to_s %>",
 			"<%= family.primary_applicant.person.last_name.to_s%>",
@@ -46,9 +41,6 @@
 			"",
 			""
 		],
-
 	<% end %>
-
   <% end %>
-
 <% end %>

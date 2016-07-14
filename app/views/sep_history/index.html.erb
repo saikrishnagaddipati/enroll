@@ -1,12 +1,9 @@
-
 <div class="container">
   <h3> <%= @person.full_name + " - SEP HISTORY" %></h3>
     <div class = "table-responsive"> 
       <table class = "table table-striped table-bordered table-history">
-        <div class="row">
-        
+        <div class="row">        
             <% @family.special_enrollment_periods.to_a.reverse_each do |f| %>
-
               <thead>              
                 <tr>
                   <th>SEP REASON</th>
@@ -21,22 +18,20 @@
                   <th>CSL#</th>
                 </tr>
               </thead>
-
               <tbody>
                 <tr>
                   <td><%=f.title %></td>
-                 
 
                   <% if f.effective_on_kind.present? %>
                     <td><%=f.effective_on_kind.humanize %></td>
                   <% else %>
                     <td>N/A</td>
                   <% end %>
-
+                  
                   <td><%=f.qle_on%></td>
                   <td><%=f.start_on%></td>
                   <td><%=f.end_on%></td>
-
+                  
                   <% if f.next_poss_effective_date.present? %>
                     <td><%=f.next_poss_effective_date %></td>
                   <% else %>
@@ -55,7 +50,6 @@
                     <td>N/A</td>
                   <% end %>
 
-
                   <% if f.option3_date.present? %>
                     <td><%=f.option3_date %></td>
                   <% else %>
@@ -67,8 +61,7 @@
                   <% else %>
                     <td>N/A</td>
                   <% end %>
-                </tr>
-            
+                </tr>            
                 <tr>
                   <% if f.admin_comment.present? %>
                     <td><%="Admin Comment: " + f.admin_comment %></td>
@@ -77,25 +70,12 @@
                   <% end %>
                 </tr>
             </tbody>
-
           <% end %>
-          
           </div>
-  
        </table>
-      
-    </div>
-
+      </div>
     <br/>
-
     <div class="col-md-2 col-md-offset-11 col-sm-2 col-xs-12">
         <%= link_to 'Back', 'javascript:void(0);', :onclick => 'history.go(-1)', :class => 'btn btn-primary' %>
     </div>
-
 </div>
-
-
-
-
-
- 
