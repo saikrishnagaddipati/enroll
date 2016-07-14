@@ -16,13 +16,15 @@
     ],
     row_functions:  true,
     row_actions:  [
-      ["trash fa-lg", "url", "request_type", "Cancel/Terminate"]
-    ],
+      ["trash fa-lg", "url", "request_type", "Cancel/Terminate", "Cancel/Terminate", [
+        ["Cancel", "url", true],
+        ["Terminate", "url", true]
+      ]]],
     buttons_below_table:  [
       # ['Export CSV', 'url', 'request_type'],
       # ['Print', 'url', 'request_type']
     ],
-    child_rows:  [true, "datatables/child_row"],
+    child_rows:  [false, "datatables/child_row"],
     responsive:  true,
     checkboxes:  true,
     pagination:  true,
